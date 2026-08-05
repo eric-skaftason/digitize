@@ -2,6 +2,7 @@
 // run with node js
 
 import mnist from 'mnist';
+import fs from 'fs/promises'; // use promise (await) API instead of callbacks
 
 // Create a training set of 1000 and a test set of 100
 const set = mnist.set(1000, 100);
@@ -10,27 +11,28 @@ const trainingSet = set.training;
 const testSet = set.test;
 
 
-// Stores 10 vectors for each digit
-let vectors = (() => {
-    let arr = [];
-    for (let i = 0; i < 10; i++) {
-        let sub_arr = [];
-        for (let i = 0; i < 784; i++) {
-            sub_arr.push(0);
+async function generateTemplates() {
+    // Stores 10 vectors for each digit
+    let vectors = (() => {
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            let sub_arr = [];
+            for (let i = 0; i < 784; i++) {
+                sub_arr.push(0);
+            }
+            arr.push(sub_arr);
         }
-        arr.push(sub_arr);
-    }
-    return arr;
-})();
-let digitCount = (() => {
-    let arr = [];
-    for (let i = 0; i < 10; i++) {
-        arr.push(0);
-    }
-    return arr;
-})();
+        return arr;
+    })();
+    let digitCount = (() => {
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            arr.push(0);
+        }
+        return arr;
+    })();
 
-function generateTemplates() {    
+
     // compute set samples to create a vector
 
     for (let i = 0; i < trainingSet.length; i++) {
@@ -43,18 +45,30 @@ function generateTemplates() {
         const digit_arr = sample_data.output;
         const digit = digit_arr.indexOf(1);
 
-
         for (let j = 0; j < 784; j++) {
-            vectors[j] += sample_arr[j];
+            vectors[digit][j] += sample_arr[j];
         }
 
         digitCount[digit]++;
     }
 
-    // quantised
+    // normalise to [0, 1]
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 784; j++) {
-            vectors[i][j] /= sample_arr[i];
+            vectors[i][j] /= digitCount[i];
         }
     }
+
+
+    // Ensure templates folder exists; create new directory if it doesn't
+    // Recursive presents error if the folder is already created
+    await fs.mkdir('./templates', { recursive: true });
+
+    const jsonStringVectors = JSON.stringify(vectors);
+
+    // Write, overwrite, or create a template json file in the templates dir
+    await fs.writeFile('./templates/template.json', jsonStringVectors, 'utf-8');
+
 }
+
+generateTemplates();

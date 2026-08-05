@@ -56,7 +56,7 @@ body {
 
     image-rendering: crisp-edges;
 
-    background-color: var(--bg-secondary);
+    background-color: black;
 
     aspect-ratio: 1;
 }

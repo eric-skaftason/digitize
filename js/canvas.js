@@ -3,20 +3,17 @@
 // Setup ->
 
 const canvas = document.querySelector('.canvas');
-// Internal # of pixels
-canvas.width = 64;
-canvas.height = 64;
 
 // CSS Styling pixels
 const rect = canvas.getBoundingClientRect();
 
-const scaleX = canvas.width / rect.width;
-const scaleY = canvas.height / rect.height;
+let scaleX, scaleY;
+initCanvasSize(64, 64);
 
 const ctx = canvas.getContext('2d');
 
-ctx.strokeStyle = "#f8fafc";
-ctx.lineWidth = 1;
+ctx.strokeStyle = "rgb(255, 255, 255)";
+ctx.lineWidth = 0.5;
 
 
 // App data ->
@@ -30,6 +27,14 @@ const bounds = {
     y_max: null
 };
 
+function initCanvasSize(width, height) {
+    // Internal # of pixels
+    canvas.width = width;
+    canvas.height = height;
+
+    scaleX = canvas.width / rect.width;
+    scaleY = canvas.height / rect.height;
+}
 
 function getMouseXY(event) {
     const mouseX = (event.clientX - rect.left) * scaleX;
@@ -56,6 +61,7 @@ function updateBounds(x, y) {
     }
 }
 
+// I/O
 document.addEventListener('mousedown', (event) => {
     if (event.target !== canvas) return;
         
@@ -96,3 +102,19 @@ const clearBtn = document.querySelector('#clear');
 clearBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
+
+
+// Must have 28x28 canvas
+function drawImage(pixel_array) {
+    for (let i = 0; i < pixel_array.length; i++) {
+        const x = i % canvas.width;
+        const y = Math.floor(i / canvas.width);
+
+        const luminance = pixel_array[i] * 255;
+
+        ctx.fillStyle = `rgb(${luminance}, ${luminance}, ${luminance})`;
+        ctx.fillRect(x, y, 1, 1);
+    }
+}
+
+export { drawImage };

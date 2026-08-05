@@ -4,8 +4,8 @@
 
 const canvas = document.querySelector('.canvas');
 // Internal # of pixels
-canvas.width = 300;
-canvas.height = 300;
+canvas.width = 64;
+canvas.height = 64;
 
 // CSS Styling pixels
 const rect = canvas.getBoundingClientRect();
@@ -16,7 +16,7 @@ const scaleY = canvas.height / rect.height;
 const ctx = canvas.getContext('2d');
 
 ctx.strokeStyle = "#f8fafc";
-ctx.lineWidth = 4;
+ctx.lineWidth = 1;
 
 
 // App data ->

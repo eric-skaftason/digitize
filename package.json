@@ -1,0 +1,25 @@
+{
+    "name": "digitize",
+    "version": "0.0.1",
+    "description": "Drawn digit classifier / OCR",
+    "type": "module",
+    "scripts": {
+        "init-vectors": "node scripts/init.js"
+    },
+    "author": "Eric Skaftason <skaftasoneric@gmail.com>",
+    "license": "CC BY-NC 4.0",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/eric-skaftason/digitize.git"
+    },
+    "keywords": [],
+    "bugs": {
+        "url": "https://github.com/eric-skaftason/digitize/issues"
+    },
+    "homepage": "https://github.com/eric-skaftason/digitize#readme",
+    "dependencies": {
+        "mnist": "^1.1.0",
+        "mnist-data": "^1.2.6"
+    }
+}

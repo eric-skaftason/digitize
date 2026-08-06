@@ -61,6 +61,40 @@ function updateBounds(x, y) {
     }
 }
 
+// Classification & Computation
+
+// get painted canvas data as an array 
+function getCanvasDataArray() {
+    const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    
+    // Convert from array in for [r1, g1, b1, a1, r2, g2, b2, a2, r3...] to an array with pixel luminance values
+
+    let chrominance_arr = [];
+    
+    for (let i = 0; i < rgba.length / 4; i++) {
+        const avergae_chrominance = (rgba[i * 4] + rgba[i * 4 + 1] + rgba[i * 4 + 2] + rgba[i * 4 + 3]) / 4;
+
+        chrominance_arr.push(avergae_chrominance);
+    }
+
+    return chrominance_arr;
+}
+
+function getCanvasPixelMatrix() {
+    const chrominance_arr = getCanvasDataArray();
+
+    let matrix = [];
+
+    for (let i = 0; i < canvas.height; i++) {
+        let row = [];
+        for (let j = 0; j < canvas.width; j++) {
+            row.push(chrominance_arr[i * canvas.width + j]);
+        }
+        matrix.push(row);
+    }
+}
+
+
 // I/O
 document.addEventListener('mousedown', (event) => {
     if (event.target !== canvas) return;
@@ -117,4 +151,4 @@ function drawImage(pixel_array) {
     }
 }
 
-export { drawImage };
+export { drawImage, getCanvasPixelMatrix };

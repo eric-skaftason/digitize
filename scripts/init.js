@@ -4,8 +4,8 @@
 import mnist from 'mnist';
 import fs from 'fs/promises'; // use promise (await) API instead of callbacks
 
-// Create a training set of 1000 and a test set of 100
-const set = mnist.set(1000, 100);
+// Create a training set of x and a test set of y
+const set = mnist.set(1000, 200);
 
 const trainingSet = set.training;
 const testSet = set.test;
@@ -63,11 +63,7 @@ async function gernerateKNN() {
     let vectors = (() => {
         let arr = [];
         for (let i = 0; i < 10; i++) {
-            let sub_arr = [];
-            for (let i = 0; i < 784; i++) {
-                sub_arr.push(0);
-            }
-            arr.push(sub_arr);
+            arr.push([]);
         }
         return arr;
     })();
@@ -110,11 +106,7 @@ async function gernerateTestSet() {
     let vectors = (() => {
         let arr = [];
         for (let i = 0; i < 10; i++) {
-            let sub_arr = [];
-            for (let i = 0; i < 784; i++) {
-                sub_arr.push(0);
-            }
-            arr.push(sub_arr);
+            arr.push([]);
         }
         return arr;
     })();
@@ -126,7 +118,7 @@ async function gernerateTestSet() {
         vectors[digit].push(sample_data);
     }
 
-    await saveJSON('test_set', vectors);
+    await saveJSON('test', vectors);
 }
 
 

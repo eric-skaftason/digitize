@@ -1,5 +1,8 @@
 // ----- Updates canvas ----- //
 
+import { classify, classifyTest } from './classifier.js';
+import { getRandomTestDigit } from './helper.js';
+
 // Setup ->
 
 const canvas = document.querySelector('.canvas');
@@ -135,6 +138,26 @@ canvas.addEventListener('mousemove', (event) => {
 const clearBtn = document.querySelector('#clear');
 clearBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+document.querySelector('#predict').addEventListener('click', () => {
+    const predictedDigit = classify('centroid', getCanvasDataArray());
+    console.log(predictedDigit)
+});
+
+document.querySelector('#predict_rand').addEventListener('click', () => {
+    const {data, digit} = getRandomTestDigit();
+
+    drawImage(data);
+
+    const predictedDigit = classify('centroid', data);
+
+    const status = digit === predictedDigit ? "Yes" : "No";
+    console.log(`Predicted: ${predictedDigit}, Actual: ${digit}, Prediction correct: ${status}`);
+});
+
+document.querySelector('#predict_test').addEventListener('click', () => {
+    classifyTest('centroid', 20);
 });
 
 

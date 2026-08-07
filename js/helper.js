@@ -1,8 +1,7 @@
-import { drawImage } from "./canvas.js";
-
 const model_urls = {
     centroids: './models/centroids.json',
-    knn: './models/knn.json'
+    knn: './models/knn.json',
+    test: './models/test.json'
 };
 
 let models = {};
@@ -36,8 +35,25 @@ function getModels() {
     return models;
 }
 
+function getRandomTestSpecificDigit(digit) {
+    const digitVectors = models.test[digit];
+
+    const randIndex = Math.floor(Math.random() * digitVectors.length);
+
+    return digitVectors[randIndex];
+}
+
+function getRandomTestDigit() {
+    const digit = Math.floor(Math.random() * 10);
+
+    return {
+        data: getRandomTestSpecificDigit(digit),
+        digit: digit
+    };
+}
+
 
 await loadModels();
 
 
-export { getModels };
+export { getModels, getRandomTestDigit };

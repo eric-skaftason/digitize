@@ -1,41 +1,85 @@
 import { getModels } from './helper.js';
-import { drawImage, getCanvasPixelMatrix, getCanvasDataArray } from "./canvas.js";
 
 const models = getModels();
 
 // Use "k nearest neighbours (KNN)" algorithm
-function classify(method) {
+function classify(method, canvasDataArray) {
     let matchedDigit;
     switch(method) {
         case 'centroid':
-            matchedDigit = getClosestCentroid();
-            
+            matchedDigit = getClosestCentroid(canvasDataArray);
+            break; 
     }
+
+
+    return matchedDigit;
 }
 
-// returns array of len 10 with # of neighbours of digit n
-// function getKnn(k, x, y) {
-//     let digits = (() => {
-//         let digits = [];
-//         for (let i = 0; i < 10; i++) {
-//             digits.push(0);
-//         }
-//         return digits;
-//     })();
+function classifyTest(method, testsPerdigit) {
+    if (testsPerdigit < 1 || testsPerdigit > models.test[0].length) return console.error("Invalid # of tests.");
 
-//     let farthestDist = 0;
+    let digitCorrect = (() => {
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            arr.push(0);
+        }
+        return arr;
+    })();
+    let totalCorrect = 0;
 
-//     for (let i = 0; i < templates.length; i++) {
-//         const template = templates[i];
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < testsPerdigit; j++) {
+            // Code for each digit's test
 
-        
-//     }
-// }
+            const testDataArray = models.test[i][j];
+            const actualDigit = i;
+
+            const predictedDigit = classify(method, testDataArray);
+
+            if (actualDigit === predictedDigit) {
+                digitCorrect[i]++;
+                totalCorrect++;
+            }
+        }
+    }
+
+    console.log("--- Accuracy Report ---");
+    for (let i = 0; i < 10; i++) {
+        const accuracyPercent = ((digitCorrect[i] / testsPerdigit) * 100).toFixed(2);
+        console.log(`Digit: ${i}, Correct: ${digitCorrect[i]}, Incorrect: ${testsPerdigit - digitCorrect[i]}, Accuracy: ${accuracyPercent}%`);
+    }
+
+    const totalAccuracyPercent = ((totalCorrect / (testsPerdigit * 10)) * 100).toFixed(2);
+    console.log(`Total correct: ${totalCorrect}, Total incorrect: ${testsPerdigit * 10 - totalCorrect}, Total accuracy: ${totalAccuracyPercent}%`);
+
+}
 
 
 // closest centroid matching
-function getClosestCentroid() {
+function getClosestCentroid(canvasDataArray) {
+    // use euclidean distance formula for n dimensions
 
+    if (canvasDataArray.length !== models.centroids[0].length) return console.error("Length mismatch of canvas data array and centroid model");
+
+    let digit;
+    let minDist = null;
+
+    for (let i = 0; i < 10; i++) {
+        const templateVector = models.centroids[i];
+
+        let sum = 0;
+        for (let j = 0; j < canvasDataArray.length; j++) {
+            sum += (canvasDataArray[j] - templateVector[j]) ** 2;
+        }
+        const dist = Math.sqrt(sum);
+
+        if (dist < minDist || minDist === null) {
+            minDist = dist
+            digit = i;
+        }
+    }
+
+    return digit;
 }
 
 function getXYByIndex(index, width) {
@@ -51,3 +95,6 @@ function distance(x1, y1, x2, y2) {
 
     return Math.sqrt(dx ** 2, dy ** 2);
 }
+
+
+export { classify, classifyTest };

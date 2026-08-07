@@ -8,7 +8,7 @@ const canvas = document.querySelector('.canvas');
 const rect = canvas.getBoundingClientRect();
 
 let scaleX, scaleY;
-initCanvasSize(64, 64);
+initCanvasSize(28, 28);
 
 const ctx = canvas.getContext('2d');
 

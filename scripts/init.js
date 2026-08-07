@@ -106,9 +106,37 @@ function getDigitByIndex(index) {
 }
 
 
+async function gernerateTestSet() {
+    let vectors = (() => {
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            let sub_arr = [];
+            for (let i = 0; i < 784; i++) {
+                sub_arr.push(0);
+            }
+            arr.push(sub_arr);
+        }
+        return arr;
+    })();
+
+    for (let i = 0; i < testSet.length; i++) {
+        const sample_data = testSet[i].input;
+        const digit = testSet[i].output.indexOf(1);
+
+        vectors[digit].push(sample_data);
+    }
+
+    await saveJSON('test_set', vectors);
+}
+
+
 async function generateModels() {
+    // Generate models & save to JSON files
     await gernerateCentroids();
     await gernerateKNN();
+
+    // Save the test set to JSON file
+    await gernerateTestSet();
 }
 
 generateModels();

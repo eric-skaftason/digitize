@@ -1,32 +1,43 @@
 import { drawImage } from "./canvas.js";
 
-let templates;
+const model_urls = {
+    centroids: './models/centroids.json',
+    knn: './models/knn.json'
+};
 
-async function loadTemplate() {
+let models = {};
+
+async function loadModel(key, url) {
     try {
-        const response = await fetch('./templates/template.json');
+        const response = await fetch(url);
 
         if (!response.ok) {
             throw new Error(`Failed to load JSON: ${response.status}`);
         }
-        
+
         // Parse body text into json
-        templates = await response.json();
+        const model = await response.json();
+
+        models[key] = model;
 
     } catch (error) {
-        console.error('Error fetching JSON:', error);
+        console.error(`Error loading model: ${error}`);
     }
 }
 
-await loadTemplate();
-
-function drawTemplate(digit) {
-    drawImage(templates[7]);
-}
-
-function getTemplates() {
-    return templates;
+async function loadModels() {
+    for (const key in model_urls) {
+        await loadModel(key, model_urls[key]);
+    }
 }
 
 
-export { drawTemplate, getTemplates };
+function getModels() {
+    return models;
+}
+
+
+await loadModels();
+
+
+export { getModels };

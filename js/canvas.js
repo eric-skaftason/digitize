@@ -151,4 +151,4 @@ function drawImage(pixel_array) {
     }
 }
 
-export { drawImage, getCanvasPixelMatrix };
+export { drawImage, getCanvasPixelMatrix, getCanvasDataArray };

@@ -11,7 +11,8 @@ const trainingSet = set.training;
 const testSet = set.test;
 
 
-async function generateTemplates() {
+// generates 10 mean vectors for nearest centroid algorithm
+async function gernerateCentroids() {
     // Stores 10 vectors for each digit
     let vectors = (() => {
         let arr = [];
@@ -36,17 +37,11 @@ async function generateTemplates() {
     // compute set samples to create a vector
 
     for (let i = 0; i < trainingSet.length; i++) {
-        const sample_data = trainingSet[i];
-
-        // stores values quantised to 0 or 1 for each pixel in a 28*28 grid
-        const sample_arr = sample_data.input;
-
-        // The pos in the array that is 1 is the digit
-        const digit_arr = sample_data.output;
-        const digit = digit_arr.indexOf(1);
+        const sample_data = getSampleDataByIndex(i);
+        const digit = getDigitByIndex(i);
 
         for (let j = 0; j < 784; j++) {
-            vectors[digit][j] += sample_arr[j];
+            vectors[digit][j] += sample_data[j];
         }
 
         digitCount[digit]++;
@@ -59,16 +54,61 @@ async function generateTemplates() {
         }
     }
 
-
-    // Ensure templates folder exists; create new directory if it doesn't
-    // Recursive presents error if the folder is already created
-    await fs.mkdir('./templates', { recursive: true });
-
-    const jsonStringVectors = JSON.stringify(vectors);
-
-    // Write, overwrite, or create a template json file in the templates dir
-    await fs.writeFile('./templates/template.json', jsonStringVectors, 'utf-8');
+    await saveJSON('centroids', vectors);
 
 }
 
-generateTemplates();
+// generates n vectors for k-NN
+async function gernerateKNN() {
+    let vectors = (() => {
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            let sub_arr = [];
+            for (let i = 0; i < 784; i++) {
+                sub_arr.push(0);
+            }
+            arr.push(sub_arr);
+        }
+        return arr;
+    })();
+
+    for (let i = 0; i < trainingSet.length; i++) {
+        const sample_data = getSampleDataByIndex(i);
+        const digit = getDigitByIndex(i);
+
+        vectors[digit].push(sample_data);
+    }
+
+    await saveJSON('knn', vectors);
+}
+
+
+async function saveJSON(file_name, json) {
+    // Ensure templates folder exists; create new directory if it doesn't
+    // Recursive presents error if the folder is already created
+    await fs.mkdir('./models', { recursive: true });
+
+    const jsonString = JSON.stringify(json);
+
+    // Write, overwrite, or create a template json file in the templates dir
+    await fs.writeFile(`./models/${file_name}.json`, jsonString, 'utf-8');
+}
+
+function getSampleDataByIndex(index) {
+    const sample_data = trainingSet[index];
+    return sample_data.input;
+}
+
+function getDigitByIndex(index) {
+    const sample_data = trainingSet[index];
+    const digit_arr = sample_data.output;
+    return digit_arr.indexOf(1);
+}
+
+
+async function generateModels() {
+    await gernerateCentroids();
+    await gernerateKNN();
+}
+
+generateModels();

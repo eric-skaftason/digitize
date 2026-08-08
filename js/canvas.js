@@ -16,7 +16,9 @@ initCanvasSize(28, 28);
 const ctx = canvas.getContext('2d');
 
 ctx.strokeStyle = "rgb(255, 255, 255)";
-ctx.lineWidth = 0.25;
+ctx.lineWidth = 1;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
 
 
 // App data ->
@@ -238,13 +240,17 @@ clearBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-document.querySelector('#predict').addEventListener('click', () => {
-    // getCentredResizedPixelArray();
+document.querySelector('#predict_centroid').addEventListener('click', () => {
     const predictedDigit = classify('centroid', getCentredResizedPixelArray());
     console.log(predictedDigit);
 });
 
-document.querySelector('#predict_rand').addEventListener('click', () => {
+document.querySelector('#predict_knn').addEventListener('click', () => {
+    const predictedDigit = classify('knn', getCentredResizedPixelArray());
+    console.log(predictedDigit);
+});
+
+document.querySelector('#rand_centroid').addEventListener('click', () => {
     const {data, digit} = getRandomTestDigit();
 
     drawImage(data);
@@ -255,8 +261,31 @@ document.querySelector('#predict_rand').addEventListener('click', () => {
     console.log(`Predicted: ${predictedDigit}, Actual: ${digit}, Prediction correct: ${status}`);
 });
 
-document.querySelector('#predict_test').addEventListener('click', () => {
+document.querySelector('#rand_knn').addEventListener('click', () => {
+    const {data, digit} = getRandomTestDigit();
+
+    drawImage(data);
+
+    const predictedDigit = classify('knn', data);
+
+    const status = digit === predictedDigit ? "Yes" : "No";
+    console.log(`Predicted: ${predictedDigit}, Actual: ${digit}, Prediction correct: ${status}`);
+});
+
+document.querySelector('#draw_rand').addEventListener('click', () => {
+    const {data, digit} = getRandomTestDigit();
+
+    drawImage(data);
+});
+
+document.querySelector('#test_centroid500').addEventListener('click', () => {
     classifyTest('centroid', 20);
+});
+
+document.querySelector('#test_knn500').addEventListener('click', () => {
+    for (let i = 1; i <= 15; i += 1) {
+        classifyTest('knn', 20, i);
+    }
 });
 
 

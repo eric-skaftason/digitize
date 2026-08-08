@@ -3,14 +3,14 @@ import { getModels } from './helper.js';
 const models = getModels();
 
 // Use "k nearest neighbours (KNN)" algorithm
-function classify(method, canvasDataArray) {
+function classify(method, canvasDataArray, k) {
     let predictedDigit;
     switch(method) {
         case 'centroid':
             predictedDigit = getClosestCentroid(canvasDataArray);
             break;
         case 'knn':
-            predictedDigit = kNN(canvasDataArray);
+            predictedDigit = kNN(canvasDataArray, k);
             break;
     }
 
@@ -18,7 +18,7 @@ function classify(method, canvasDataArray) {
     return predictedDigit;
 }
 
-function classifyTest(method, testsPerdigit) {
+function classifyTest(method, testsPerdigit, k) {
     if (testsPerdigit < 1 || testsPerdigit > models.test[0].length) return console.error("Invalid # of tests.");
 
     let digitCorrect = (() => {
@@ -37,7 +37,7 @@ function classifyTest(method, testsPerdigit) {
             const testDataArray = models.test[i][j];
             const actualDigit = i;
 
-            const predictedDigit = classify(method, testDataArray);
+            const predictedDigit = classify(method, testDataArray, k);
 
             if (actualDigit === predictedDigit) {
                 digitCorrect[i]++;
@@ -47,6 +47,7 @@ function classifyTest(method, testsPerdigit) {
     }
 
     console.log("--- Accuracy Report ---");
+    if (k) console.log(` -- k = ${k} --`);
     for (let i = 0; i < 10; i++) {
         const accuracyPercent = ((digitCorrect[i] / testsPerdigit) * 100).toFixed(2);
         console.log(`Digit: ${i}, Correct: ${digitCorrect[i]}, Incorrect: ${testsPerdigit - digitCorrect[i]}, Accuracy: ${accuracyPercent}%`);
@@ -95,8 +96,9 @@ function getDist(canvasDataArray, templateVector) {
     return dist;
 }
 
-function kNN(canvasDataArray, k = 5) {
+function kNN(canvasDataArray, k) {
     if (canvasDataArray.length !== models.centroids[0].length) return console.error("Length mismatch of canvas data array and centroid model");
+    if (!k) k = 25;
 
     let minKdistances = [];
 
@@ -104,23 +106,36 @@ function kNN(canvasDataArray, k = 5) {
         for (const templateVector of models.knn[i]) {
             const dist = getDist(canvasDataArray, templateVector);
 
-            if (minKdistances < k) {
+            if (minKdistances.length < k) {
                 minKdistances.push({dist: dist, digit: i});
             } else {
-                // replace max dist in the minKdistances arr if the dist is less that the max
-                let max = 0;
+                // Find the neighbour with the greatest distance in the current 'minKdistances' list
+                let maxDist = 0;
                 let maxIndex;
-                for (let j = 0; j < distances.length; j++) {
-                    if (minKdistances[j] > max) {
-                        max = minKdistances[j];
+                for (let j = 0; j < minKdistances.length; j++) {
+                    if (minKdistances[j].dist > maxDist) {
+                        maxDist = minKdistances[j].dist;
                         maxIndex = j;
                     }
                 }
-                if (dist < max) minKdistances.splice(maxIndex, 1, dist); 
+                if (dist < maxDist) {
+                    minKdistances[maxIndex] = { dist: dist, digit: i };
+                }
             }
         }
     }
 
+    let digitIntances = Array(10).fill(0);
+    for (const item of minKdistances) {
+        digitIntances[item.digit]++;
+    }
+
+    let predictedDigit = 0;
+    for (let i = 0; i < digitIntances.length; i++) {
+        if (digitIntances[i] > digitIntances[predictedDigit]) predictedDigit = i;
+    }
+
+    return predictedDigit;
 }
 
 function getXYByIndex(index, width) {

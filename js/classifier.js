@@ -4,15 +4,18 @@ const models = getModels();
 
 // Use "k nearest neighbours (KNN)" algorithm
 function classify(method, canvasDataArray) {
-    let matchedDigit;
+    let predictedDigit;
     switch(method) {
         case 'centroid':
-            matchedDigit = getClosestCentroid(canvasDataArray);
-            break; 
+            predictedDigit = getClosestCentroid(canvasDataArray);
+            break;
+        case 'knn':
+            predictedDigit = kNN(canvasDataArray);
+            break;
     }
 
 
-    return matchedDigit;
+    return predictedDigit;
 }
 
 function classifyTest(method, testsPerdigit) {
@@ -80,6 +83,44 @@ function getClosestCentroid(canvasDataArray) {
     }
 
     return digit;
+}
+
+function getDist(canvasDataArray, templateVector) {
+    let sum = 0;
+    for (let i = 0; i < canvasDataArray.length; i++) {
+        sum += (canvasDataArray[i] - templateVector[i]) ** 2;
+    }
+    const dist = Math.sqrt(sum);
+
+    return dist;
+}
+
+function kNN(canvasDataArray, k = 5) {
+    if (canvasDataArray.length !== models.centroids[0].length) return console.error("Length mismatch of canvas data array and centroid model");
+
+    let minKdistances = [];
+
+    for (let i = 0; i < 10; i++) { // iterate through each digit
+        for (const templateVector of models.knn[i]) {
+            const dist = getDist(canvasDataArray, templateVector);
+
+            if (minKdistances < k) {
+                minKdistances.push({dist: dist, digit: i});
+            } else {
+                // replace max dist in the minKdistances arr if the dist is less that the max
+                let max = 0;
+                let maxIndex;
+                for (let j = 0; j < distances.length; j++) {
+                    if (minKdistances[j] > max) {
+                        max = minKdistances[j];
+                        maxIndex = j;
+                    }
+                }
+                if (dist < max) minKdistances.splice(maxIndex, 1, dist); 
+            }
+        }
+    }
+
 }
 
 function getXYByIndex(index, width) {

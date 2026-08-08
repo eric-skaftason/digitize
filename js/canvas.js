@@ -5,7 +5,7 @@ import { getRandomTestDigit } from './helper.js';
 
 // Setup ->
 
-const canvas = document.querySelector('.canvas');
+const canvas = document.querySelector('#main_canvas');
 
 // CSS Styling pixels
 const rect = canvas.getBoundingClientRect();
@@ -16,7 +16,7 @@ initCanvasSize(28, 28);
 const ctx = canvas.getContext('2d');
 
 ctx.strokeStyle = "rgb(255, 255, 255)";
-ctx.lineWidth = 0.5;
+ctx.lineWidth = 0.25;
 
 
 // App data ->
@@ -68,7 +68,12 @@ function updateBounds(x, y) {
 
 // get painted canvas data as an array 
 function getCanvasDataArray() {
-    const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    return getCanvasDataArrayDirect(canvas);
+}
+
+function getCanvasDataArrayDirect(canvasEle) {
+    const context = canvasEle.getContext('2d');
+    const rgba = context.getImageData(0, 0, canvasEle.width, canvasEle.height).data;
     
     // Convert from array in for [r1, g1, b1, a1, r2, g2, b2, a2, r3...] to an array with pixel luminance values
 
@@ -97,6 +102,99 @@ function getCanvasPixelMatrix() {
     }
 }
 
+function getXYByIndex(index, width) {
+    const x = index % width;
+    const y = Math.floor(index / width);
+
+    return {x: x, y: y};
+}
+
+function getBoundingBox(pixelArray) {
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = 0;
+    let maxY = 0;
+    
+    for (let i = 0; i < pixelArray.length; i++) {
+        const {x, y} = getXYByIndex(i, canvas.width);
+
+        if (pixelArray[i] === 0) continue;
+
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+    }
+
+    return {
+        minX: minX,
+        minY: minY,
+        maxX: maxX,
+        maxY: maxY,
+        box_width: maxX - minX + 1,
+        box_height: maxY - minY + 1
+    };
+}
+
+function getCentredResizedPixelArray(sideLen = 28, innerSquareSideLen = 20) {
+    // centred bounding box helps to prevent incorrect prediction if the pixels are slightly shifted
+
+    // Important info:
+    // MNIST dataset scales digits to fit in a 20x20 box, centred in the 28x28 image
+    
+    const pixelArray = getCanvasDataArray();
+
+    const {minX, minY, maxX, maxY, box_width, box_height} = getBoundingBox(pixelArray);
+    const scaleFactor = innerSquareSideLen / Math.max(box_width, box_height);
+
+    const scaledWidth = box_width * scaleFactor;
+    const scaledHeight = box_height * scaleFactor;
+
+    // X and Y starting values of where to put scaled image on scaled canvas
+    const startingX = Math.floor((sideLen - scaledWidth) / 2);
+    const startingY = Math.floor((sideLen - scaledHeight) / 2);
+
+    // Generate pixel array
+    const resizedPixelArray = Array(sideLen * sideLen).fill(0);
+
+    // Create temporary off-screen canvas to use for scaling
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = sideLen;
+    tempCanvas.height = sideLen;
+    const tempCtx = tempCanvas.getContext('2d');
+
+    // Use image smooting to mimic MNIST smoothing
+    tempCtx.imageSmoothingEnabled = true;
+    tempCtx.imageSmoothingQuality = 'high';
+
+    // Draw image from main canvas, scaled
+    tempCtx.drawImage(
+        canvas, // sourvce
+        minX, minY, // sample starting point from source
+        box_width, box_height, // size of area to crop from source
+        startingX, startingY, // starting point for drawing on the canvas
+        scaledWidth, scaledHeight
+    );
+
+
+    return getCanvasDataArrayDirect(tempCanvas);
+}
+
+
+function displayDebug28(pixelArray28) {
+    const og_width = canvas.width;
+    const og_height = canvas.height;
+
+    canvas.width = 28;
+    canvas.height = 28;
+
+    drawImage(pixelArray28);
+
+    setTimeout(() => {
+        canvas.width = og_width;
+        canvas.height = og_height;
+    }, 2000);
+}
 
 // I/O
 document.addEventListener('mousedown', (event) => {
@@ -141,8 +239,9 @@ clearBtn.addEventListener('click', () => {
 });
 
 document.querySelector('#predict').addEventListener('click', () => {
-    const predictedDigit = classify('centroid', getCanvasDataArray());
-    console.log(predictedDigit)
+    // getCentredResizedPixelArray();
+    const predictedDigit = classify('centroid', getCentredResizedPixelArray());
+    console.log(predictedDigit);
 });
 
 document.querySelector('#predict_rand').addEventListener('click', () => {

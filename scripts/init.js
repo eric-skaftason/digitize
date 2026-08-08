@@ -35,7 +35,6 @@ async function gernerateCentroids() {
 
 
     // compute set samples to create a vector
-
     for (let i = 0; i < trainingSet.length; i++) {
         const sample_data = getSampleDataByIndex(i);
         const digit = getDigitByIndex(i);

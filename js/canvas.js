@@ -11,15 +11,14 @@ const canvas = document.querySelector('#main_canvas');
 const rect = canvas.getBoundingClientRect();
 
 let scaleX, scaleY;
-initCanvasSize(28, 28);
+initCanvasSize(112, 112);
 
 const ctx = canvas.getContext('2d');
 
 ctx.strokeStyle = "rgb(255, 255, 255)";
-ctx.lineWidth = 1;
-ctx.lineCap = 'round';
-ctx.lineJoin = 'round';
+ctx.lineWidth = 6;
 
+ctx.imageSmoothingEnabled = false;
 
 // App data ->
 
@@ -73,7 +72,7 @@ function getCanvasDataArray() {
     return getCanvasDataArrayDirect(canvas);
 }
 
-function getCanvasDataArrayDirect(canvasEle) {
+function getCanvasDataArrayDirectOld(canvasEle) {
     const context = canvasEle.getContext('2d');
     const rgba = context.getImageData(0, 0, canvasEle.width, canvasEle.height).data;
     
@@ -85,6 +84,26 @@ function getCanvasDataArrayDirect(canvasEle) {
         const avergae_chrominance = (rgba[i * 4] + rgba[i * 4 + 1] + rgba[i * 4 + 2] + rgba[i * 4 + 3]) / 4;
 
         chrominance_arr.push(avergae_chrominance);
+    }
+
+    return chrominance_arr;
+}
+
+function getCanvasDataArrayDirect(canvasEle) {
+    const context = canvasEle.getContext('2d');
+    const rgba = context.getImageData(0, 0, canvasEle.width, canvasEle.height).data;
+    
+    // Convert from array in for [r1, g1, b1, a1, r2, g2, b2, a2, r3...] to an array with pixel luminance values
+
+    let chrominance_arr = [];
+    
+    for (let i = 0; i < rgba.length / 4; i++) {
+
+        // don't include alpha in avg chrominance value bc. black can have an a-value of 255 -> (0, 0, 0, 255)
+        const average_chrominance = (rgba[i * 4] + rgba[i * 4 + 1] + rgba[i * 4 + 2]) / 3;
+        const average_chrominance_clamped = average_chrominance / 255;
+
+        chrominance_arr.push(average_chrominance_clamped);
     }
 
     return chrominance_arr;
@@ -140,21 +159,50 @@ function getBoundingBox(pixelArray) {
 
 function getCentredResizedPixelArray(sideLen = 28, innerSquareSideLen = 20) {
     // centred bounding box helps to prevent incorrect prediction if the pixels are slightly shifted
+    // Uses centre of mass to centre to canvas
 
     // Important info:
     // MNIST dataset scales digits to fit in a 20x20 box, centred in the 28x28 image
     
     const pixelArray = getCanvasDataArray();
 
+    // Compute bounding box
     const {minX, minY, maxX, maxY, box_width, box_height} = getBoundingBox(pixelArray);
     const scaleFactor = innerSquareSideLen / Math.max(box_width, box_height);
 
     const scaledWidth = box_width * scaleFactor;
     const scaledHeight = box_height * scaleFactor;
 
-    // X and Y starting values of where to put scaled image on scaled canvas
-    const startingX = Math.floor((sideLen - scaledWidth) / 2);
-    const startingY = Math.floor((sideLen - scaledHeight) / 2);
+    // Compute centre of mass
+    let sumLuminance = 0;
+    for (let i = 0; i < pixelArray.length; i++) {
+        const luminance = pixelArray[i];
+        sumLuminance += luminance;
+    }
+
+    if (sumLuminance === 0) {
+        return new Array(sideLen * sideLen).fill(0);
+    }
+
+    let sumX = 0, sumY = 0;
+    for (let i = 0; i < pixelArray.length; i++) {
+        const luminance = pixelArray[i];
+        const {x, y} = getXYByIndex(i, canvas.width);
+
+        sumX += luminance * x;
+        sumY += luminance * y;
+    }
+    // relative to scaled bounding box
+    const centre = {
+        x: ((sumX / sumLuminance) - minX) * scaleFactor,
+        y: ((sumY / sumLuminance) - minY) * scaleFactor
+    };
+
+    // relative to scaled canvas
+    const startingPos = {
+        x: sideLen / 2 - centre.x,
+        y: sideLen / 2 - centre.y
+    };
 
     // Generate pixel array
     const resizedPixelArray = Array(sideLen * sideLen).fill(0);
@@ -171,15 +219,50 @@ function getCentredResizedPixelArray(sideLen = 28, innerSquareSideLen = 20) {
 
     // Draw image from main canvas, scaled
     tempCtx.drawImage(
-        canvas, // sourvce
+        canvas, // source
         minX, minY, // sample starting point from source
         box_width, box_height, // size of area to crop from source
-        startingX, startingY, // starting point for drawing on the canvas
+        startingPos.x, startingPos.y, // starting point for drawing on the canvas
         scaledWidth, scaledHeight
     );
 
 
     return getCanvasDataArrayDirect(tempCanvas);
+}
+
+function getResizedPixelArray(pixelArray, sideLen) {
+    const resizedPixelArray = Array(sideLen * sideLen).fill(0);
+
+    // Create temporary off-screen canvas to use for scaling
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = 28;
+    tempCanvas.height = 28;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.imageSmoothingEnabled = false;
+
+    drawImageDirect(tempCanvas, pixelArray);
+
+    return getCanvasDataArrayDirect(tempCanvas);
+}
+
+function draw28(pixelArray) {
+    if (canvas.width === 28) {
+        drawImage(pixelArray);
+        return;
+    }
+
+    const resizedPixelArray = Array(784).fill(0);
+
+    // Create temporary off-screen canvas to use for scaling
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = 28;
+    tempCanvas.height = 28;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.imageSmoothingEnabled = false;
+
+    drawImageDirect(tempCanvas, pixelArray);
+
+    ctx.drawImage(tempCanvas, 0, 0, 28, 28, 0, 0, canvas.width, canvas.width);
 }
 
 
@@ -196,6 +279,14 @@ function displayDebug28(pixelArray28) {
         canvas.width = og_width;
         canvas.height = og_height;
     }, 2000);
+}
+
+
+// takes data from canvas, redraws onto canvas
+function debugRedraw() {
+    const canvasDataArray = getCanvasDataArray();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawImage(canvasDataArray);
 }
 
 // I/O
@@ -250,10 +341,21 @@ document.querySelector('#predict_knn').addEventListener('click', () => {
     console.log(predictedDigit);
 });
 
+document.querySelector('#redraw').addEventListener('click', () => {
+    debugRedraw();
+});
+document.querySelector('#debug28').addEventListener('click', () => {
+    const processedPixels = getCentredResizedPixelArray();
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    draw28(processedPixels);
+});
+
+
 document.querySelector('#rand_centroid').addEventListener('click', () => {
     const {data, digit} = getRandomTestDigit();
 
-    drawImage(data);
+    draw28(data);
 
     const predictedDigit = classify('centroid', data);
 
@@ -264,7 +366,7 @@ document.querySelector('#rand_centroid').addEventListener('click', () => {
 document.querySelector('#rand_knn').addEventListener('click', () => {
     const {data, digit} = getRandomTestDigit();
 
-    drawImage(data);
+    draw28(data);
 
     const predictedDigit = classify('knn', data);
 
@@ -275,7 +377,7 @@ document.querySelector('#rand_knn').addEventListener('click', () => {
 document.querySelector('#draw_rand').addEventListener('click', () => {
     const {data, digit} = getRandomTestDigit();
 
-    drawImage(data);
+    draw28(data);
 });
 
 document.querySelector('#test_centroid500').addEventListener('click', () => {
@@ -289,16 +391,38 @@ document.querySelector('#test_knn500').addEventListener('click', () => {
 });
 
 
+document.querySelector('#test_knn100_draw').addEventListener('click', () => {
+    let correct = 0;
+    for (let i = 1; i <= 100; i += 1) {
+        const {data, digit} = getRandomTestDigit();
+
+        draw28(data);
+
+        const predictedDigit = classify('knn', getCentredResizedPixelArray());
+
+        const status = digit === predictedDigit ? "Yes" : "No";
+        if (digit === predictedDigit) correct++;
+        console.log(`Predicted: ${predictedDigit}, Actual: ${digit}, Prediction correct: ${status}`);
+    }
+
+    console.log("Accuracy: ", (correct).toFixed(2), '%');
+});
+
 // Must have 28x28 canvas
 function drawImage(pixel_array) {
+    drawImageDirect(canvas, pixel_array);
+}
+
+function drawImageDirect(canvas, pixel_array) {
+    const context = canvas.getContext('2d');
     for (let i = 0; i < pixel_array.length; i++) {
         const x = i % canvas.width;
         const y = Math.floor(i / canvas.width);
 
         const luminance = pixel_array[i] * 255;
 
-        ctx.fillStyle = `rgb(${luminance}, ${luminance}, ${luminance})`;
-        ctx.fillRect(x, y, 1, 1);
+        context.fillStyle = `rgb(${luminance}, ${luminance}, ${luminance})`;
+        context.fillRect(x, y, 1, 1);
     }
 }
 

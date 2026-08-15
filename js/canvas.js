@@ -2,6 +2,7 @@
 
 import { classify, classifyTest } from './classifier.js';
 import { getRandomTestDigit } from './helper.js';
+import { printMessage, hideMessage } from "./message.js";
 
 // Setup ->
 
@@ -320,7 +321,7 @@ canvas.addEventListener('mousemove', (event) => {
     ctx.stroke();
 
     // Reset starting point
-    ctx.moveTo(mouse.x, mouse.y)
+    ctx.moveTo(mouse.x, mouse.y);
     
 });
 
@@ -329,6 +330,7 @@ canvas.addEventListener('mousemove', (event) => {
 const clearBtn = document.querySelector('#clear');
 clearBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hideMessage();
 });
 
 document.querySelector('#predict_centroid').addEventListener('click', () => {
@@ -339,6 +341,7 @@ document.querySelector('#predict_centroid').addEventListener('click', () => {
 document.querySelector('#predict_knn').addEventListener('click', () => {
     const predictedDigit = classify('knn', getCentredResizedPixelArray());
     console.log(predictedDigit);
+    printMessage(['Predicted digit:', predictedDigit]);
 });
 
 document.querySelector('#redraw').addEventListener('click', () => {

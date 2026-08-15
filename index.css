@@ -5,7 +5,7 @@
 
     /* Text */
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
+    --text-secondary: #b6c6dd;
     --text-dark: #050811;
 
     /* Borders & Dividers */
@@ -49,6 +49,8 @@ body {
     flex-direction: column;
 
     width: 600px;
+
+    position: relative;
 }
 
 .canvas {
@@ -64,6 +66,63 @@ body {
 #debug_canvas {
     position: absolute;
 }
+
+.message {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    /* Display should be flex when displayed; none otherwise */
+    display: none;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 0;
+    box-sizing: border-box;
+
+    user-select: none;
+
+    width: 100%;
+    padding: 10px;
+
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+.message_line {
+    color: var(--text-dark);
+    margin: 5px;
+}
+
+#line1 {
+    font-size: 20px;
+}
+#line2 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+#close_message {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    user-select: none;
+
+    background-color: rgba(96, 96, 96, 0.8);
+}
+#close_message:hover {
+    background-color: rgba(64, 64, 64, 0.8);
+}
+
 
 .menu {
     width: 100%;
@@ -90,4 +149,16 @@ body {
 
 .menu_btn:hover {
     background-color: var(--accent-primary-active);
+}
+
+
+/* Animations */
+@keyframes fadeToHidden {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }

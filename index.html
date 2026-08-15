@@ -17,8 +17,15 @@
                 <canvas class="canvas" id="main_canvas"></canvas>
                 <!-- <canvas class="canvas" id="debug_canvas"></canvas> -->
             </div>
+            <div class="message">
+                <p class="message_line" id="line1"></p>
+                <p class="message_line" id="line2"></p>
+
+                <div id="close_message">x</div>
+            </div>
+
             <div class="menu">
-                <button class="menu_btn" id="predict_knn">Predict!</button>
+                <button class="menu_btn" id="predict">Predict!</button>
             </div>
             <div class="menu">
                 <button class="menu_btn" id="clear">Clear</button>
@@ -41,6 +48,7 @@
     </div>
     
     <script src="./js/canvas.js" type="module"></script>
+    <script src="./js/message.js" type="module"></script>
     <script src="./js/classifier.js" type="module"></script>
     <script src="./js/helper.js" type="module"></script>
 

@@ -5,6 +5,10 @@ import {
     debugRedraw, debug28
 } from "./canvas.js";
 
+import {
+    openSettingsMenu, closeSettingsMenu, toggle
+} from "./settings.js"
+
 // Predict
 document.querySelector('#predict')?.addEventListener('click', predictKNN);
 document.querySelector('#predict_centroid')?.addEventListener('click', predictCentroid);
@@ -81,4 +85,13 @@ canvas.addEventListener('mousemove', (event) => {
 
     // Reset starting point
     ctx.moveTo(mouse.x, mouse.y);
+});
+
+
+// Settings menu
+document.querySelector('#settings')?.addEventListener('click', openSettingsMenu);
+document.querySelector('#close_settings_menu_top_right')?.addEventListener('click', closeSettingsMenu);
+
+document.querySelectorAll('.toggle').forEach((toggleElement) => {
+    toggleElement.addEventListener('click', (event) => {toggle(toggleElement)});
 });

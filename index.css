@@ -10,12 +10,17 @@
 
     /* Borders & Dividers */
     --border: #26334d;
+    --border-accent: #1e40af;
 
     /* Accents */
     --accent-primary: #38bdf8;
     --accent-primary-active: #0e98dd;
     --accent-secondary: #818cf8;
     --danger: #f87171;
+
+    --accent-bright: #fb923c;
+    --accent-bright-active: #e7812c;
+    --accent-bright-active-dark: #f97316;
 }
 
 * {
@@ -40,8 +45,10 @@ body {
 .demo_container {
     display: flex;
     flex-direction: column;
-
     align-items: center;
+
+    width: fit-content;
+    margin-inline: auto;
 }
 
 .demo_wrapper {
@@ -55,6 +62,7 @@ body {
 
 .canvas {
     width: 100%;
+    margin: 0;
 
     image-rendering: crisp-edges;
 
@@ -113,6 +121,10 @@ body {
     width: 40px;
     height: 40px;
 
+    box-sizing: border-box;
+
+    padding: 5px;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -152,6 +164,27 @@ body {
 
 .menu_btn:hover {
     background-color: var(--accent-primary-active);
+}
+
+.menu_btn.square {
+    flex: none; /* Keep button from expanding - flex */
+    aspect-ratio: 1;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+.menu_btn#settings {
+    border-left: 1px solid black;
+}
+
+.menu_btn#predict {
+    background-color: var(--accent-bright);
+}
+.menu_btn#predict:hover {
+    background-color: var(--accent-bright-active);
 }
 
 

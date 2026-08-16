@@ -12,6 +12,13 @@
     <h1>Digitize</h1>
 
     <div class="demo_container">
+        <div class="menu">
+            <button class="menu_btn" id="clear">Clear</button>
+            <button class="menu_btn square" id="settings">
+                <img src="./assets/settings.svg" alt="⚙">
+            </button>
+        </div>
+
         <div class="demo_wrapper">
             <div class="canvas_container">
                 <canvas class="canvas" id="main_canvas"></canvas>
@@ -22,32 +29,48 @@
                 <p class="message_line text_line"></p>
                 <p class="message_line digit_line" id="digit_line"></p>
 
-                <div id="close_message">x</div>
-            </div>
-
-            <div class="menu">
-                <button class="menu_btn" id="predict">Predict!</button>
-            </div>
-             
-            <div class="menu">
-                <button class="menu_btn" id="clear">Clear</button>
-                <button class="menu_btn" id="predict_centroid">Centroid</button>
-                <button class="menu_btn" id="predict_knn">k-NN</button>
-                <button class="menu_btn" id="redraw">Redraw</button>
-                <button class="menu_btn" id="debug28">Debug28</button>
-            </div>
-            <div class="menu">
-                <button class="menu_btn" id="rand_centroid">Random (Centroid)</button>
-                <button class="menu_btn" id="rand_knn">Random (k-NN)</button>
-                <button class="menu_btn" id="draw_rand">Draw Random</button>
-            </div>
-            <div class="menu">
-                <button class="menu_btn" id="test_centroid500">500 Centroid</button>
-                <button class="menu_btn" id="test_knn100_draw">100 Draw k-NN</button>
-                <button class="menu_btn" id="test_knn500">500 k-NN</button>
+                <div id="close_message">
+                    <img src="./assets/close.svg" alt="x">
+                </div>
             </div>
             
         </div>
+
+
+        <div class="menu">
+            <button class="menu_btn" id="predict">Predict!</button>
+        </div>
+        
+
+
+        <!--
+        <div class="menu">
+            <button class="menu_btn" id="clear">Clear</button>
+            <button class="menu_btn" id="predict_centroid">Centroid</button>
+            <button class="menu_btn" id="predict_knn">k-NN</button>
+            <button class="menu_btn" id="redraw">Redraw</button>
+            <button class="menu_btn" id="debug28">Debug28</button>
+        </div>
+        <div class="menu">
+            <button class="menu_btn" id="rand_centroid">Random (Centroid)</button>
+            <button class="menu_btn" id="rand_knn">Random (k-NN)</button>
+            <button class="menu_btn" id="draw_rand">Draw Random</button>
+        </div>
+        <div class="menu">
+            <button class="menu_btn" id="test_centroid500">500 Centroid</button>
+            <button class="menu_btn" id="test_knn100_draw">100 Draw k-NN</button>
+            <button class="menu_btn" id="test_knn500">500 k-NN</button>
+        </div>
+        -->
+
+
+        <!-- <div class="settings_menu">
+            <h2>Settings</h2>
+
+            <div class="options">
+
+            </div>
+        </div> -->
     </div>
     
     <script src="./js/canvas.js" type="module"></script>

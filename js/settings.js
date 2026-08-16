@@ -1,0 +1,7 @@
+function openSettingsMenu() {
+    
+}
+
+function closeSettingsMenu() {
+    
+}

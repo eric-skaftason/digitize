@@ -1,22 +1,24 @@
 import { 
     predictCentroid, predictKNN,
-    drawRandomTestDigit,
+    drawRandomTestDigit, clear,
     testCentroid500, testKNN500, testKNN100_draw,
     debugRedraw, debug28
 } from "./canvas.js";
 
 // Predict
-document.querySelector('#predict_centroid').addEventListener('click', predictCentroid);
-document.querySelector('#predict_knn').addEventListener('click', predictKNN);
+document.querySelector('#predict')?.addEventListener('click', predictKNN);
+document.querySelector('#predict_centroid')?.addEventListener('click', predictCentroid);
+document.querySelector('#predict_knn')?.addEventListener('click', predictKNN);
 
 // Draw
-document.querySelector('#redraw').addEventListener('click', debugRedraw);
-document.querySelector('#draw_rand').addEventListener('click', drawRandomTestDigit);
+document.querySelector('#redraw')?.addEventListener('click', debugRedraw);
+document.querySelector('#draw_rand')?.addEventListener('click', drawRandomTestDigit);
+document.querySelector('#clear')?.addEventListener('click', clear);
 
 // Benchmarking tests
-document.querySelector('#test_centroid500').addEventListener('click', testCentroid500);
-document.querySelector('#test_knn500').addEventListener('click', testKNN500);
-document.querySelector('#test_knn100_draw').addEventListener('click', testKNN100_draw);
+document.querySelector('#test_centroid500')?.addEventListener('click', testCentroid500);
+document.querySelector('#test_knn500')?.addEventListener('click', testKNN500);
+document.querySelector('#test_knn100_draw')?.addEventListener('click', testKNN100_draw);
 
 // I/O
 const canvas = document.querySelector('#main_canvas');

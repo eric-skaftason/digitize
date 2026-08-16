@@ -144,22 +144,6 @@ function getCentredResizedPixelArray(sideLen = 28, innerSquareSideLen = 20) {
     return getCanvasDataArrayDirect(tempCanvas);
 }
 
-// unused
-function getResizedPixelArray(pixelArray, sideLen) {
-    const resizedPixelArray = Array(sideLen * sideLen).fill(0);
-
-    // Create temporary off-screen canvas to use for scaling
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = 28;
-    tempCanvas.height = 28;
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.imageSmoothingEnabled = false;
-
-    drawImageDirect(tempCanvas, pixelArray);
-
-    return getCanvasDataArrayDirect(tempCanvas);
-}
-
 // draws 28x28 image to full size canvas
 function draw28(pixelArray28) {
     if (canvas.width === 28) {
@@ -187,30 +171,6 @@ function debug28() {
     draw28(processedPixels);
 }
 
-// Deprecated
-function displayDebug28(pixelArray28) {
-    const og_width = canvas.width;
-    const og_height = canvas.height;
-
-    canvas.width = 28;
-    canvas.height = 28;
-
-    drawImage(pixelArray28);
-
-    setTimeout(() => {
-        canvas.width = og_width;
-        canvas.height = og_height;
-    }, 2000);
-}
-
-
-// takes data from canvas, redraws onto canvas
-function debugRedraw() {
-    const canvasDataArray = getCanvasDataArray();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawImage(canvasDataArray);
-}
-
 
 // --- Export functions --- //
 
@@ -229,6 +189,13 @@ function predictKNN() {
 function drawRandomTestDigit() {
     const {data, digit} = getRandomTestDigit();
     draw28(data);
+}
+
+// takes data from canvas, redraws onto canvas
+function debugRedraw() {
+    const canvasDataArray = getCanvasDataArray();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawImage(canvasDataArray);
 }
 
 // Benchmarking Tests
@@ -259,20 +226,17 @@ function testKNN100_draw() {
     console.log("Accuracy: ", (correct).toFixed(2), '%');
 }
 
+function clear() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hideMessage();
+}
+
 export {
     predictCentroid, predictKNN,
-    drawRandomTestDigit,
+    drawRandomTestDigit, clear,
     testCentroid500, testKNN500, testKNN100_draw,
     debugRedraw, debug28
 };
-
-
-// Canvas menu buttons
-const clearBtn = document.querySelector('#clear');
-clearBtn.addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    hideMessage();
-});
 
 // Must have 28x28 canvas
 function drawImage(pixel_array) {

@@ -94,10 +94,13 @@ body {
     margin: 5px;
 }
 
-#line1 {
+.text_line {
     font-size: 20px;
 }
-#line2 {
+.text_line_heading {
+    font-weight: bold;
+}
+.digit_line {
     font-size: 36px;
     font-weight: bold;
 }

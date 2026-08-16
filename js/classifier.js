@@ -2,7 +2,7 @@ import { getModels } from './helper.js';
 
 const models = getModels();
 
-// Use "k nearest neighbours (KNN)" algorithm
+// Deprecated - to be replaced with cleaner function
 function classify(method, canvasDataArray, k) {
     let predictedDigit;
     switch(method) {
@@ -18,6 +18,7 @@ function classify(method, canvasDataArray, k) {
     return predictedDigit;
 }
 
+// Deprecated - to be replaced with cleaner function
 function classifyTest(method, testsPerdigit, k) {
     if (testsPerdigit < 1 || testsPerdigit > models.test[0].length) return console.error("Invalid # of tests.");
 
@@ -58,8 +59,7 @@ function classifyTest(method, testsPerdigit, k) {
 
 }
 
-
-// closest centroid matching
+// --- Prediction models --- //
 function getClosestCentroid(canvasDataArray) {
     // use euclidean distance formula for n dimensions
 
@@ -84,16 +84,6 @@ function getClosestCentroid(canvasDataArray) {
     }
 
     return digit;
-}
-
-function getDist(canvasDataArray, templateVector) {
-    let sum = 0;
-    for (let i = 0; i < canvasDataArray.length; i++) {
-        sum += (canvasDataArray[i] - templateVector[i]) ** 2;
-    }
-    const dist = Math.sqrt(sum);
-
-    return dist;
 }
 
 function kNN(canvasDataArray, k) {
@@ -136,6 +126,19 @@ function kNN(canvasDataArray, k) {
     }
 
     return predictedDigit;
+}
+
+
+// --- Helper functions --- //
+
+function getDist(canvasDataArray, templateVector) {
+    let sum = 0;
+    for (let i = 0; i < canvasDataArray.length; i++) {
+        sum += (canvasDataArray[i] - templateVector[i]) ** 2;
+    }
+    const dist = Math.sqrt(sum);
+
+    return dist;
 }
 
 function getXYByIndex(index, width) {

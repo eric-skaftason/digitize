@@ -18,8 +18,9 @@
                 <!-- <canvas class="canvas" id="debug_canvas"></canvas> -->
             </div>
             <div class="message">
-                <p class="message_line" id="line1"></p>
-                <p class="message_line" id="line2"></p>
+                <p class="message_line text_line text_line_heading"></p>
+                <p class="message_line text_line"></p>
+                <p class="message_line digit_line" id="digit_line"></p>
 
                 <div id="close_message">x</div>
             </div>
@@ -27,6 +28,7 @@
             <div class="menu">
                 <button class="menu_btn" id="predict">Predict!</button>
             </div>
+             
             <div class="menu">
                 <button class="menu_btn" id="clear">Clear</button>
                 <button class="menu_btn" id="predict_centroid">Centroid</button>
@@ -44,10 +46,12 @@
                 <button class="menu_btn" id="test_knn100_draw">100 Draw k-NN</button>
                 <button class="menu_btn" id="test_knn500">500 k-NN</button>
             </div>
+            
         </div>
     </div>
     
     <script src="./js/canvas.js" type="module"></script>
+    <script src="./js/canvasInput.js" type="module"></script>
     <script src="./js/message.js" type="module"></script>
     <script src="./js/classifier.js" type="module"></script>
     <script src="./js/helper.js" type="module"></script>

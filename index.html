@@ -40,7 +40,30 @@
         <div class="menu">
             <button class="menu_btn" id="predict">Predict!</button>
         </div>
+
+        <div class="menu granular_model_selection">
+            <button class="menu_btn" id="draw_rand">Draw Random</button>
+            <button class="menu_btn" id="predict_centroid">Centroid</button>
+            <button class="menu_btn" id="predict_knn">k-NN</button>
+        </div>
         
+        <div class="menu debug_options">
+            <button class="menu_btn" id="redraw">Redraw</button>
+            <button class="menu_btn" id="debug28">Debug28</button>
+        </div>
+
+        <div class="menu test_suite">
+            <button class="menu_btn" id="rand_centroid">Random (Centroid)</button>
+            <button class="menu_btn" id="rand_knn">Random (k-NN)</button>
+        </div>
+        <div class="menu test_suite">
+            <button class="menu_btn" id="test_centroid500">500 Centroid</button>
+            <button class="menu_btn" id="test_knn100_draw">100 Draw k-NN</button>
+            <button class="menu_btn" id="test_knn500">500 k-NN</button>
+        </div>
+
+
+        <!--
         <div class="menu debug_options">
             <button class="menu_btn" id="clear">Clear</button>
             <button class="menu_btn" id="predict_centroid">Centroid</button>
@@ -58,6 +81,7 @@
             <button class="menu_btn" id="test_knn100_draw">100 Draw k-NN</button>
             <button class="menu_btn" id="test_knn500">500 k-NN</button>
         </div>
+        -->
     </div>
 
     <div class="modal_settings">
@@ -71,13 +95,18 @@
             <div class="options">
 
                 <div class="option">
-                    <div class="toggle" id="show_debug_options"><div class="toggle_indicator"></div></div>
+                    <div class="toggle" id="granular_model_selection"><div class="toggle_indicator"></div></div>
+                    <p class="desc">Show Granular Model Selectioon</p>
+                </div>
+                <div class="option">
+                    <div class="toggle" id="debug_options"><div class="toggle_indicator"></div></div>
                     <p class="desc">Show Debug Options</p>
                 </div>
                 <div class="option">
-                    <div class="toggle enabled"><div class="toggle_indicator"></div></div>
-                    <p class="desc">Show Debug Options</p>
+                    <div class="toggle" id="test_suite"><div class="toggle_indicator"></div></div>
+                    <p class="desc">Show Test Suite</p>
                 </div>
+                
             </div>
 
             <div class="menu_footer">

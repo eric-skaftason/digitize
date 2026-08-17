@@ -3,7 +3,9 @@ import { objIsEqual } from "./utils.js";
 
 // Initialise default settings
 let settings = {
-    show_debug_options: false
+    granular_model_selection: false,
+    debug_options: false,
+    test_suite: false
 };
 if (!localStorage.getItem("digitize_settings")) {
     localStorage.setItem("digitize_settings", JSON.stringify(settings));

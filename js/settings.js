@@ -1,16 +1,17 @@
 import { updateUI } from "./uiSettingsManager.js";
-
+import { objIsEqual } from "./utils.js";
 
 // Initialise default settings
 let settings = {
     show_debug_options: false
 };
-const storedSettingsStr = localStorage.getItem("digitize_settings");
-if (!storedSettingsStr) {
+if (!localStorage.getItem("digitize_settings")) {
     localStorage.setItem("digitize_settings", JSON.stringify(settings));
 } else {
     loadSettings();
 }
+
+let unsavedChanges = false;
 
 
 // Button actions
@@ -34,34 +35,50 @@ function toggle(toggleElement) {
     if (toggleElement.classList.contains('enabled')) toggleAnimate(toggleElement, false);
     else toggleAnimate(toggleElement, true);
 }
-// To visually set toggle
+// To visually set toggle and setting data
 function toggleAnimate(toggleElement, isEnabled) {
     if (isEnabled) {
         toggleElement.classList.add('enabled');
-        setToggle(toggleElement.id, true);
+        setSetting(toggleElement.id, true);
     } else {
         toggleElement.classList.remove('enabled');
-        setToggle(toggleElement.id, false);
+        setSetting(toggleElement.id, false);
     }
 }
 
 
 // Helper functions
-function setToggle(toggleElementId, boolValue) {
-    settings[toggleElementId] = boolValue;
-    saveSettings();
+function setSetting(toggleElementId, value) {
+    settings[toggleElementId] = value;
+
+    updateUnsavedSettingsHighlighting();
 }
 
 function saveSettings() {
     localStorage.setItem("digitize_settings", JSON.stringify(settings));
+    updateUnsavedSettingsHighlighting();
 }
 
 function loadSettings() {
-    settings = JSON.parse(storedSettingsStr);
+    settings = JSON.parse(localStorage.getItem("digitize_settings"));
 }
 
 function discardChanges() {
     loadSettings();
+}
+
+function discardAndClose() {
+    if (unsavedChanges) {
+        if (!confirm("Unsaved changes will be lost; proceed?")) return;   
+    }
+
+    discardChanges();
+    closeSettingsMenu();
+}
+
+function saveAndClose() {
+    saveSettings();
+    closeSettingsMenu();
 }
 
 function getSetting(key) {
@@ -69,4 +86,19 @@ function getSetting(key) {
 }
 
 
-export { getSetting, openSettingsMenu, closeSettingsMenu, toggle };
+// Update unsaved settings highlighting
+function updateUnsavedSettingsHighlighting() {
+    if (!objIsEqual(settings, JSON.parse(localStorage.getItem("digitize_settings")))) {
+        document.querySelector("#save_settings").classList.add("unsaved_exists");
+        document.querySelector("#menu_footer_note").innerText = "Unsaved Changes!";
+
+        unsavedChanges = true;
+    } else {
+        document.querySelector("#save_settings").classList.remove("unsaved_exists");
+        document.querySelector("#menu_footer_note").innerText = "";
+
+        unsavedChanges = false;
+    }
+}
+
+export { getSetting, saveSettings, openSettingsMenu, closeSettingsMenu, saveAndClose, discardAndClose, toggle };

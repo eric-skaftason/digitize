@@ -6,7 +6,7 @@ import {
 } from "./canvas.js";
 
 import {
-    openSettingsMenu, closeSettingsMenu, toggle
+    getSetting, saveSettings, openSettingsMenu, closeSettingsMenu, saveAndClose, discardAndClose, toggle
 } from "./settings.js"
 
 // Predict
@@ -90,8 +90,13 @@ canvas.addEventListener('mousemove', (event) => {
 
 // Settings menu
 document.querySelector('#settings')?.addEventListener('click', openSettingsMenu);
-document.querySelector('#close_settings_menu_top_right')?.addEventListener('click', closeSettingsMenu);
+document.querySelector('#close_settings_menu_top_right')?.addEventListener('click', discardAndClose);
 
 document.querySelectorAll('.toggle').forEach((toggleElement) => {
     toggleElement.addEventListener('click', (event) => {toggle(toggleElement)});
 });
+
+// Menu footer
+document.querySelector("#close_settings_menu").addEventListener("click", discardAndClose);
+document.querySelector("#save_settings").addEventListener("click", saveSettings);
+document.querySelector("#save_settings_close_menu").addEventListener("click", saveAndClose);

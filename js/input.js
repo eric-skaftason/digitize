@@ -28,7 +28,7 @@ document.querySelector('#test_knn100_draw')?.addEventListener('click', testKNN10
 const canvas = document.querySelector('#main_canvas');
 const ctx = canvas.getContext('2d');
 
-const rect = canvas.getBoundingClientRect();
+let rect = canvas.getBoundingClientRect();
 
 let scaleX, scaleY;
 initCanvasSize(112, 112);
@@ -49,6 +49,8 @@ function initCanvasSize(width, height) {
 let isMouseDown = false;
 
 function getMouseXY(event) {
+    rect = canvas.getBoundingClientRect();
+    
     const mouseX = (event.clientX - rect.left) * scaleX;
     const mouseY = (event.clientY - rect.top) * scaleY;
 

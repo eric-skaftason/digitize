@@ -176,12 +176,14 @@ function debug28() {
 
 // Prediction
 function predictCentroid() {
-    const predictedDigit = classify('centroid', getCentredResizedPixelArray());
+    const predictedDigit = classify.closestCentroid(getCentredResizedPixelArray());
+    // const predictedDigit = classify('centroid', getCentredResizedPixelArray());
     printPrediction("centroid", predictedDigit);
 }
 
 function predictKNN() {
-    const predictedDigit = classify('knn', getCentredResizedPixelArray());
+    const predictedDigit = classify.kNN(getCentredResizedPixelArray());
+    // const predictedDigit = classify('knn', getCentredResizedPixelArray());
     printPrediction("k-NN", predictedDigit);
 }
 
@@ -216,7 +218,7 @@ function testKNN100_draw() {
 
         draw28(data);
 
-        const predictedDigit = classify('knn', getCentredResizedPixelArray());
+        const predictedDigit = classify.kNN(getCentredResizedPixelArray());
 
         const status = digit === predictedDigit ? "Yes" : "No";
         if (digit === predictedDigit) correct++;

@@ -5,6 +5,8 @@ import {
     debugRedraw, debug28
 } from "./canvas.js";
 
+import { tests } from "./tests.js";
+
 import {
     getSetting, saveSettings, openSettingsMenu, closeSettingsMenu, saveAndClose, discardAndClose, toggle
 } from "./settings.js"
@@ -23,6 +25,8 @@ document.querySelector('#clear')?.addEventListener('click', clear);
 document.querySelector('#test_centroid500')?.addEventListener('click', testCentroid500);
 document.querySelector('#test_knn500')?.addEventListener('click', testKNN500);
 document.querySelector('#test_knn100_draw')?.addEventListener('click', testKNN100_draw);
+
+document.querySelector("#test_kNN20").addEventListener("click", tests.kNN20);
 
 // I/O
 const canvas = document.querySelector('#main_canvas');

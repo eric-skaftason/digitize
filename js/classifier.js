@@ -1,9 +1,10 @@
 import { getModels } from './helper.js';
 
 const models = getModels();
+const default_k = 25;
 
 // Deprecated - to be replaced with cleaner function
-function classify(method, canvasDataArray, k) {
+function classifyOld(method, canvasDataArray, k) {
     let predictedDigit;
     switch(method) {
         case 'centroid':
@@ -60,7 +61,7 @@ function classifyTest(method, testsPerdigit, k) {
 }
 
 // --- Prediction models --- //
-function getClosestCentroid(canvasDataArray) {
+function closestCentroid(canvasDataArray) {
     // use euclidean distance formula for n dimensions
 
     if (canvasDataArray.length !== models.centroids[0].length) return console.error("Length mismatch of canvas data array and centroid model");
@@ -128,6 +129,11 @@ function kNN(canvasDataArray, k) {
     return predictedDigit;
 }
 
+const classify = {
+    kNN: kNN,
+    closestCentroid: closestCentroid
+}
+
 
 // --- Helper functions --- //
 
@@ -155,5 +161,9 @@ function distance(x1, y1, x2, y2) {
     return Math.sqrt(dx ** 2, dy ** 2);
 }
 
+function getTestSet() {
+    return models.test;
+}
 
-export { classify, classifyTest };
+
+export { getTestSet, classify, classifyTest };

@@ -1,7 +1,6 @@
 import { 
     predictCentroid, predictKNN,
     drawRandomTestDigit, clear,
-    testCentroid500, testKNN500, testKNN100_draw,
     debugRedraw, debug28
 } from "./canvas.js";
 
@@ -11,22 +10,24 @@ import {
     getSetting, saveSettings, openSettingsMenu, closeSettingsMenu, saveAndClose, discardAndClose, toggle
 } from "./settings.js"
 
-// Predict
+// Main functions: predict, clear
 document.querySelector('#predict')?.addEventListener('click', predictKNN);
+document.querySelector('#clear')?.addEventListener('click', clear);
+
+// Granular model selection & draw random
 document.querySelector('#predict_centroid')?.addEventListener('click', predictCentroid);
 document.querySelector('#predict_knn')?.addEventListener('click', predictKNN);
 
-// Draw
-document.querySelector('#redraw')?.addEventListener('click', debugRedraw);
 document.querySelector('#draw_rand')?.addEventListener('click', drawRandomTestDigit);
-document.querySelector('#clear')?.addEventListener('click', clear);
+
+// Debug functions
+document.querySelector('#redraw')?.addEventListener('click', debugRedraw);
 
 // Benchmarking tests
-document.querySelector('#test_centroid500')?.addEventListener('click', testCentroid500);
-document.querySelector('#test_knn500')?.addEventListener('click', testKNN500);
-document.querySelector('#test_knn100_draw')?.addEventListener('click', testKNN100_draw);
+document.querySelector('#test_centroid500')?.addEventListener('click', tests.centroid500);
+document.querySelector('#test_knn500')?.addEventListener('click', tests.kNN500);
+document.querySelector('#test_knn500_draw')?.addEventListener('click', tests.kNN500_draw);
 
-document.querySelector("#test_kNN20").addEventListener("click", tests.kNN20);
 
 // I/O
 const canvas = document.querySelector('#main_canvas');

@@ -4,7 +4,7 @@
     "description": "Drawn digit classifier / OCR",
     "type": "module",
     "scripts": {
-        "init-vectors": "node scripts/init.js"
+        "init-models": "node scripts/init.js"
     },
     "author": "Eric Skaftason <skaftasoneric@gmail.com>",
     "license": "CC BY-NC 4.0",

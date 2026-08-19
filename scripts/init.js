@@ -5,7 +5,7 @@ import mnist from 'mnist';
 import fs from 'fs/promises'; // use promise (await) API instead of callbacks
 
 // Create a training set of x and a test set of y
-const set = mnist.set(2000, 200);
+const set = mnist.set(2000, 1000);
 
 const trainingSet = set.training;
 const testSet = set.test;

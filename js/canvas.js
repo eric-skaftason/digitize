@@ -1,6 +1,6 @@
 // ----- Updates canvas ----- //
 
-import { classify, classifyTest } from './classifier.js';
+import { classify } from './classifier.js';
 import { getRandomTestDigit } from './helper.js';
 import { printMessage, hideMessage, printPrediction } from "./message.js";
 
@@ -200,34 +200,6 @@ function debugRedraw() {
     drawImage(canvasDataArray);
 }
 
-// Benchmarking Tests
-function testCentroid500() {
-    classifyTest('centroid', 20);
-}
-
-function testKNN500() {
-    for (let i = 1; i <= 15; i += 1) {
-        classifyTest('knn', 20, i);
-    }
-}
-
-function testKNN100_draw() {
-    let correct = 0;
-    for (let i = 1; i <= 100; i += 1) {
-        const {data, digit} = getRandomTestDigit();
-
-        draw28(data);
-
-        const predictedDigit = classify.kNN(getCentredResizedPixelArray());
-
-        const status = digit === predictedDigit ? "Yes" : "No";
-        if (digit === predictedDigit) correct++;
-        console.log(`Predicted: ${predictedDigit}, Actual: ${digit}, Prediction correct: ${status}`);
-    }
-
-    console.log("Accuracy: ", (correct).toFixed(2), '%');
-}
-
 function clear() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     hideMessage();
@@ -236,7 +208,6 @@ function clear() {
 export {
     predictCentroid, predictKNN,
     drawRandomTestDigit, clear,
-    testCentroid500, testKNN500, testKNN100_draw,
     debugRedraw, debug28
 };
 
@@ -258,4 +229,4 @@ function drawImageDirect(canvas, pixel_array) {
     }
 }
 
-export { getCanvasDataArray };
+export { draw28, getCentredResizedPixelArray };

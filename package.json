@@ -1,7 +1,7 @@
 {
     "name": "digitize",
     "version": "1.0.0",
-    "description": "handwritten digit classifier (OCR)",
+    "description": "Digitize is a web app that uses the MNIST dataset to recognise handwritten digits.",
     "type": "module",
     "scripts": {
         "init-models": "node scripts/init.js"

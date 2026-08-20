@@ -1,7 +1,6 @@
 # Digitize
 
-Digitize is a web app that uses machine learning algorithms to recognise handwritten digits.
-
+Digitize is a web app that uses the MNIST dataset to recognise handwritten digits.
 
 
 ## Features:
@@ -14,11 +13,13 @@ Digitize is a web app that uses machine learning algorithms to recognise handwri
 
 ## How to run:
 
-### Option 1 - Use precomputed model data
+### Option 1 - [Use live demo](https://eric-skaftason.github.io/digitize/)
+
+### Option 2 - Use precomputed model data
 1. Start a local server - required because the fetch API is used
 2. Open the index.html file
 
-### Option 2 - Recompute model data
+### Option 3 - Recompute model data
 1. Navigate to project's root directory
 2. Install dependencies -> `npm install`
 3. Compute model data -> `npm run init-models`

@@ -1,6 +1,6 @@
 {
     "name": "digitize",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Drawn digit classifier / OCR",
     "type": "module",
     "scripts": {
@@ -19,7 +19,6 @@
     },
     "homepage": "https://github.com/eric-skaftason/digitize#readme",
     "dependencies": {
-        "mnist": "^1.1.0",
         "mnist-data": "^1.2.6"
     }
 }

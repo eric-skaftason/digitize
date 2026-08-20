@@ -1,14 +1,16 @@
 // --- Vector precomputation for template matching in OCR --- //
 // run with node js
 
-import mnist from 'mnist';
+import mnist from 'mnist-data';
 import fs from 'fs/promises'; // use promise (await) API instead of callbacks
 
-// Create a training set of x and a test set of y
-const set = mnist.set(2000, 1000);
+const TRAINING_SIZE = 10000;
+const TEST_SIZE = 1000;
 
-const trainingSet = set.training;
-const testSet = set.test;
+const trainingSet = mnist.training(0, TRAINING_SIZE);
+const testSet = mnist.testing(0, TEST_SIZE);
+
+// trainingSet.images.values -> contains a length 28 array containing 28 ints for each row
 
 
 // generates 10 mean vectors for nearest centroid algorithm
@@ -35,7 +37,7 @@ async function gernerateCentroids() {
 
 
     // compute set samples to create a vector
-    for (let i = 0; i < trainingSet.length; i++) {
+    for (let i = 0; i < TRAINING_SIZE; i++) {
         const sample_data = getSampleDataByIndex(i);
         const digit = getDigitByIndex(i);
 
@@ -67,7 +69,7 @@ async function gernerateKNN() {
         return arr;
     })();
 
-    for (let i = 0; i < trainingSet.length; i++) {
+    for (let i = 0; i < TRAINING_SIZE; i++) {
         const sample_data = getSampleDataByIndex(i);
         const digit = getDigitByIndex(i);
 
@@ -89,15 +91,20 @@ async function saveJSON(file_name, json) {
     await fs.writeFile(`./models/${file_name}.json`, jsonString, 'utf-8');
 }
 
+// Normalise range of [0, 255] -> [0, 1]
+function normalise255(sampleImageArray) {
+    for (let i = 0; i < sampleImageArray.length; i++) {
+        sampleImageArray[i] /= 255;
+    }
+    return sampleImageArray
+}
+
 function getSampleDataByIndex(index) {
-    const sample_data = trainingSet[index];
-    return sample_data.input;
+    return normalise255((trainingSet.images.values[index]).flat());
 }
 
 function getDigitByIndex(index) {
-    const sample_data = trainingSet[index];
-    const digit_arr = sample_data.output;
-    return digit_arr.indexOf(1);
+    return trainingSet.labels.values[index];
 }
 
 
@@ -110,9 +117,9 @@ async function gernerateTestSet() {
         return arr;
     })();
 
-    for (let i = 0; i < testSet.length; i++) {
-        const sample_data = testSet[i].input;
-        const digit = testSet[i].output.indexOf(1);
+    for (let i = 0; i < TEST_SIZE; i++) {
+        const sample_data = normalise255((testSet.images.values[i]).flat());
+        const digit = testSet.labels.values[i];
 
         vectors[digit].push(sample_data);
     }

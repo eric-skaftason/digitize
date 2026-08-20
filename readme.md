@@ -25,6 +25,27 @@ Digitize is a web app that uses machine learning algorithms to recognise handwri
 4. Start local server
 5. Open index.html
 
+## How to use:
+
+### Classify a handwritten digit:
+1. Draw a digit on the canvas
+2. Click "Predict"
+3. Click "Clear" to continue
+
+### Accessing additional functions:
+1. Click the cog "⚙" to open the settings menu
+2. Enable any additional menus for extra functionality
+3. Save settings and close menu 
+
+### Menu: Granular Model Selection
+Allows slection of a specific algorithm for digit classification.  Click on the desired button to predict using the corresponding algorithm.  The menu also includes a function to draw a random digit on the canvas.
+
+### Menu: Debug Options
+Debug functions.
+
+### Menu: Test Suite
+Provides functions to test the accuracy of the predicition algorithms using the MNIST test set.  All results print in the console.  Some tests may take a while; the page can become unresponsive during this time.
+
 
 ## Screenshots & Demos:
 

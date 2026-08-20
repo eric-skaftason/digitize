@@ -1,13 +1,13 @@
 {
     "name": "digitize",
     "version": "1.0.0",
-    "description": "Drawn digit classifier / OCR",
+    "description": "handwritten digit classifier (OCR)",
     "type": "module",
     "scripts": {
         "init-models": "node scripts/init.js"
     },
     "author": "Eric Skaftason <skaftasoneric@gmail.com>",
-    "license": "CC BY-NC 4.0",
+    "license": "GPL-3.0-only",
     "main": "index.js",
     "repository": {
         "type": "git",

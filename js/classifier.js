@@ -89,7 +89,7 @@ function closestCentroid(canvasDataArray) {
 
 function kNN(canvasDataArray, k) {
     if (canvasDataArray.length !== models.centroids[0].length) return console.error("Length mismatch of canvas data array and centroid model");
-    if (!k) k = 25;
+    if (!k) k = 7;
 
     let minKdistances = [];
 

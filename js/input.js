@@ -27,7 +27,7 @@ document.querySelector('#redraw')?.addEventListener('click', debugRedraw);
 document.querySelector('#test_centroid500')?.addEventListener('click', tests.centroid500);
 document.querySelector('#test_knn500')?.addEventListener('click', tests.kNN500);
 document.querySelector('#test_knn500_draw')?.addEventListener('click', tests.kNN500_draw);
-document.querySelector('#test_knn20')?.addEventListener('click', tests.kNN20);
+document.querySelector('#test_knn500_testK')?.addEventListener('click', tests.knn500_testK);
 
 
 // I/O

@@ -19,6 +19,20 @@ const totalSamples = (() => {
 })();
 
 
+function getResultsSummary(results) {
+    let resultsSummary = {
+        correct: 0,
+        tests: 0
+    };
+
+    for (let i = 0; i < 10; i++) {
+        resultsSummary.correct += results[i].correct;
+        resultsSummary.tests += results[i].tests;
+    }
+
+    return resultsSummary;
+}
+
 function getRandomTestDigitNonReplace(sampleFromArray, draw = false) {
     const digit = Math.floor(Math.random() * 10);
 
@@ -121,36 +135,64 @@ function generateResultsStr(testName, paramInfo, results) {
 }
 
 // Test weapper functions to export
-
 function kNN20() {
-    const results = kNN(20, 25);
-    const resultsStr = generateResultsStr("kNN20", "k = 25", results);
+    const results = kNN(20, 7);
+    const resultsStr = generateResultsStr("kNN20", "k = 7", results);
     console.log(resultsStr);
 }
 
 function kNN500() {
-    const results = kNN(500, 25);
-    const resultsStr = generateResultsStr("kNN500", "k = 25", results);
+    const results = kNN(500, 7);
+    const resultsStr = generateResultsStr("kNN500", "k = 7", results);
     console.log(resultsStr);
 }
 
 function centroid500() {
-    const results = centroid(500, 25);
+    const results = centroid(500, 7);
     const resultsStr = generateResultsStr("centroid500", null, results);
     console.log(resultsStr);
 }
 
 function kNN500_draw() {
-    const results = kNN(500, 25, {draw: true});
-    const resultsStr = generateResultsStr("kNN500_draw", "k = 25", results);
+    const results = kNN(500, 7, {draw: true});
+    const resultsStr = generateResultsStr("kNN500_draw", "k = 7", results);
     console.log(resultsStr);
+}
+
+function kNN_testK(tests, k_min, k_max, k_interval) {
+    let accuracies = [];
+
+    for (let k = k_min; k <= k_max; k += k_interval) {
+        const results = kNN(tests, k);
+        const resultsStr = generateResultsStr("kNN", `k = ${k}`, results);
+        console.log(resultsStr);
+
+        const resultsSummary = getResultsSummary(results);
+        accuracies.push({
+            k: k,
+            correct: resultsSummary.correct,
+            tests: resultsSummary.tests
+        });
+    }
+
+    console.log("\n\n --- Overall Accuracy Summary --- \n");
+
+    for (let i = 0; i < accuracies.length; i++) {
+        const {k, correct, tests} = accuracies[i];
+        console.log(`k: ${k}, Correct: ${correct}, Tests: ${tests}`);
+    }
+}
+
+function knn500_testK() {
+    kNN_testK(500, 1, 13, 2);
 }
 
 const tests = {
     kNN20: kNN20,
     kNN500: kNN500,
     centroid500: centroid500,
-    kNN500_draw: kNN500_draw
+    kNN500_draw: kNN500_draw,
+    knn500_testK: knn500_testK
 };
 
 export { tests };

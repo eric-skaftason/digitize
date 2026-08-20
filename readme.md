@@ -9,7 +9,7 @@ Digitize is a web app that uses machine learning algorithms to recognise handwri
 - Two prediction algorithms:
     - Nearest Centroid - compares input to the centroids (i.e. average pixel value representations) of each digit from the training set
     - k-Nearest Neighbours - finds k closest images in the training set and selects the most commonly predicted digit
-- Benchmarking suite: for testing algorithm accuracy
+- Benchmarking suite: for testing algorithm accuracy -> results print to browser developer console
 - Settings menu: settings to toggle visibility of menus to create a cleaner UI
 
 ## How to run:

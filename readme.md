@@ -17,8 +17,8 @@ Digitize is a web app that uses the MNIST dataset to recognise handwritten digit
 
 ### Option 2 - Run Locally
 1. Ensure Node.js (and npm) are installed
-2. Run `npm install` to install required packages
-3. Open a command terminal in the root directory of the project
+2. Open a command terminal in the root directory of the project
+3. Run `npm install` to install required packages
 4. Run `npx serve .`
 5. Open the localhost link printed to the CLI
 

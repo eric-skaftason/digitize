@@ -19,6 +19,7 @@
     },
     "homepage": "https://github.com/eric-skaftason/digitize#readme",
     "dependencies": {
-        "mnist-data": "^1.2.6"
+        "mnist-data": "^1.2.6",
+        "serve": "^14.2.6"
     }
 }

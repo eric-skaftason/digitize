@@ -15,16 +15,19 @@ Digitize is a web app that uses the MNIST dataset to recognise handwritten digit
 
 ### Option 1 - [Use live demo](https://eric-skaftason.github.io/digitize/)
 
-### Option 2 - Use precomputed model data
-1. Start a local server - required because the fetch API is used
-2. Open the index.html file
+### Option 2 - Run Locally
+1. Ensure Node.js is installed
+2. Run `npm install` to install required packages
+3. Open a command terminal in the root directory of the project
+4. Run `npx serve .`
+5. Open the localhost link printed to the CLI
 
-### Option 3 - Recompute model data
-1. Navigate to project's root directory
+### To recompute model data
+1. Open a command terminal in the root directory of the project
 2. Install dependencies -> `npm install`
 3. Compute model data -> `npm run init-models`
-4. Start local server
-5. Open index.html
+4. Start local server -> `npx serve .`
+5. Open the localhost link printed to the CLI
 
 ## How to use:
 
